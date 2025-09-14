@@ -1,0 +1,29 @@
+name = "crud-app-backend"
+main = "src/worker.js"
+compatibility_date = "2023-12-01"
+
+[env.production]
+name = "crud-app-backend-prod"
+
+[env.staging]
+name = "crud-app-backend-staging"
+
+# Environment variables
+[vars]
+NODE_ENV = "production"
+API_VERSION = "1.0.0"
+
+# Secrets (set via wrangler secret put)
+# GOOGLE_PLACES_API_KEY
+# REDIS_URL
+# CORS_ORIGIN
+
+# KV Namespaces for caching (alternative to Redis)
+[[kv_namespaces]]
+binding = "CACHE"
+id = "your-kv-namespace-id"
+preview_id = "your-preview-kv-namespace-id"
+
+# Limits
+[limits]
+cpu_ms = 50000

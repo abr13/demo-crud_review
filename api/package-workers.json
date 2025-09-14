@@ -1,0 +1,23 @@
+{
+  "name": "crud-app-backend-workers",
+  "version": "1.0.0",
+  "description": "CRUD App Backend - Cloudflare Workers version",
+  "main": "src/worker.js",
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "deploy:staging": "wrangler deploy --env staging",
+    "deploy:prod": "wrangler deploy --env production",
+    "tail": "wrangler tail",
+    "secret:put": "wrangler secret put"
+  },
+  "dependencies": {
+    "hono": "^3.12.0"
+  },
+  "devDependencies": {
+    "wrangler": "^3.22.0"
+  }
+}
+
+

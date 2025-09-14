@@ -1,0 +1,112 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+        cache-dependency-path: api/package-lock.json
+        
+    - name: Setup Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: '3.24.0'
+        channel: 'stable'
+        
+    - name: Install API dependencies
+      run: |
+        cd api
+        npm ci
+        
+    - name: Install Flutter dependencies
+      run: |
+        cd app
+        flutter pub get
+        
+    - name: Lint API
+      run: |
+        cd api
+        npm run lint
+        
+    - name: Lint Flutter app
+      run: |
+        cd app
+        flutter analyze
+        
+    - name: Test API
+      run: |
+        cd api
+        npm run test:ci
+        
+    - name: Test Flutter app
+      run: |
+        cd app
+        flutter test
+        
+    - name: Build API
+      run: |
+        cd api
+        npm run build
+        
+    - name: Build Flutter app
+      run: |
+        cd app
+        flutter build apk --release
+        
+    - name: Upload test results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: test-results-${{ matrix.node-version }}
+        path: |
+          api/coverage/
+          app/test/
+          
+  deploy-staging:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/develop'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Deploy to staging
+      run: |
+        echo "Deploying to staging environment..."
+        # Add your staging deployment commands here
+        # Example: deploy to staging server, update staging database, etc.
+        
+  deploy-production:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Deploy to production
+      run: |
+        echo "Deploying to production environment..."
+        # Add your production deployment commands here
+        # Example: deploy to production server, update production database, etc.
+
