@@ -18,7 +18,7 @@ class Environment {
   static bool get isProduction => _isProduction;
 
   // Development URLs
-  static const String devBaseUrl = 'http://192.168.1.16:3000/v1';
+  static const String devBaseUrl = 'http://192.168.1.12:3000/v1';
   static const String localBaseUrl = 'http://localhost:3000/v1';
 
   // Production URLs (example)
@@ -37,5 +37,3 @@ class Environment {
     }
   }
 }
-
-

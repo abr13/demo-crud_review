@@ -11,22 +11,27 @@ This document outlines the system architecture for the CRUD app - a lean MVP tha
 │   Flutter App   │    │   Edge BFF      │    │  Google Places  │
 │   (Mobile)      │◄──►│   (Node.js)     │◄──►│      API        │
 └─────────────────┘    └─────────────────┘    └─────────────────┘
-         │                       │                       │
-         │                       │                       │
-         ▼                       ▼                       ▼
-┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│   Local Cache   │    │   Redis Cache   │    │   Google Maps   │
-│   (Temporary)   │    │   (Short TTL)   │    │   (Deep Link)   │
-└─────────────────┘    └─────────────────┘    └─────────────────┘
+         │                       │
+         │                       │
+         │                       ▼
+         │              ┌─────────────────┐
+         │              │   Redis Cache   │
+         │              │   (Short TTL)   │
+         │              └─────────────────┘
+         │
+         ▼
+┌─────────────────┐
+│   Google Maps   │
+│   (External)    │
+└─────────────────┘
 ```
 
 ## Frontend Architecture (Flutter + BLoC)
 
-### MVP Scope - 4 Screens Only
+### MVP Scope - 3 Screens Only
 1. **Search Screen**: Sticky search bar with debounce (300-400ms)
 2. **Results List**: Business cards with essential info
 3. **Business Detail**: Header + filters + reviews (max 5)
-4. **See on Google**: Deep link to Google Maps
 
 ### Architecture Layers
 1. **Presentation Layer**: UI components, pages, widgets
@@ -57,7 +62,6 @@ This document outlines the system architecture for the CRUD app - a lean MVP tha
 - Google Places API proxy
 - Short-term caching (2-5 min search, 15-60 min details)
 - Rate limiting and input validation
-- Deep link generation
 - Health monitoring
 
 ## Data Architecture (No Persistent Database)
@@ -143,7 +147,6 @@ This document outlines the system architecture for the CRUD app - a lean MVP tha
 ### Frontend (Flutter)
 - **State Management**: BLoC for consistency
 - **Network**: Dio for HTTP communication
-- **Deep Links**: url_launcher for Google Maps
 - **UI**: Material 3 for Google-like design
 
 ### Backend (Node.js)
